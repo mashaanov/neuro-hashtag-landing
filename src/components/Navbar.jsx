@@ -12,7 +12,6 @@ const Navbar = () => {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
-
       if (isScrolling.current) return;
 
       const sections = ["hero", "services-and-team", "order-form"];
@@ -26,9 +25,7 @@ const Navbar = () => {
             scrollPosition >= offsetTop &&
             scrollPosition < offsetTop + offsetHeight
           ) {
-            if (section !== activeSection) {
-              setActiveSection(section);
-            }
+            if (section !== activeSection) setActiveSection(section);
             break;
           }
         }
@@ -42,16 +39,11 @@ const Navbar = () => {
   const scrollToSection = (sectionId) => {
     isScrolling.current = true;
     setIsOpen(false);
-
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
       setActiveSection(sectionId);
-
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
       scrollTimeout.current = setTimeout(() => {
         isScrolling.current = false;
         scrollTimeout.current = null;
@@ -62,16 +54,11 @@ const Navbar = () => {
   const scrollToForm = () => {
     isScrolling.current = true;
     setIsOpen(false);
-
     const element = document.getElementById("order-form");
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
       setActiveSection("order-form");
-
-      if (scrollTimeout.current) {
-        clearTimeout(scrollTimeout.current);
-      }
-
+      if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
       scrollTimeout.current = setTimeout(() => {
         isScrolling.current = false;
         scrollTimeout.current = null;
@@ -84,12 +71,8 @@ const Navbar = () => {
   return (
     <nav
       className={`
-        fixed w-full z-50 top-0 transition-all duration-300
-        ${
-          scrolled
-            ? "bg-black/90 shadow-[0_0_30px_rgba(139,92,246,0.3)]"
-            : "bg-black/50"
-        }
+        fixed w-full z-50 top-0 transition-colors duration-200
+        ${scrolled ? "bg-black/95" : "bg-black/50"}
         border-b border-white/10
       `}
     >
@@ -99,21 +82,16 @@ const Navbar = () => {
         <div className="flex justify-between items-center py-3">
           <button
             onClick={() => scrollToSection("hero")}
-            className="focus:outline-none group perspective-500"
+            className="focus:outline-none"
           >
-            <div className="transform transition-all duration-300 group-hover:rotate-y-12 group-hover:rotate-x-6 group-hover:scale-110">
-              <div className="relative">
-                <div className="absolute inset-0 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-300 -z-10" />
-                <img
-                  src={hashtag}
-                  alt="Hashtag Logo"
-                  className="h-10 md:h-14 w-auto object-contain relative z-10 transition-all duration-300 group-hover:drop-shadow-[0_20px_30px_rgba(139,92,246,0.5)]"
-                />
-              </div>
-            </div>
+            <img
+              src={hashtag}
+              alt="Hashtag Logo"
+              className="h-10 md:h-14 w-auto object-contain"
+            />
           </button>
 
-          {/* Десктоп меню */}
+          {/* Десктоп меню - без изменений */}
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
             <div className="flex items-center gap-6 lg:gap-8">
               {[
@@ -147,9 +125,6 @@ const Navbar = () => {
                         ${active ? "w-full opacity-100" : "w-0 opacity-0"}
                       `}
                     />
-                    {!active && (
-                      <span className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl -z-0" />
-                    )}
                   </button>
                 );
               })}
@@ -174,13 +149,12 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Мобильная кнопка меню */}
+          {/* Мобильная кнопка меню - БЕЗ backdrop-blur */}
           <button
-            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 backdrop-blur-sm border border-white/20 hover:border-fuchsia-400/50 transition-all duration-200 focus:outline-none active:scale-95"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-500/40 to-cyan-500/40 border border-white/20 focus:outline-none active:scale-95"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Меню"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500 to-cyan-500 rounded-lg opacity-0 hover:opacity-20 transition-opacity" />
             {isOpen ? (
               <X size={20} className="text-fuchsia-400" />
             ) : (
@@ -189,60 +163,57 @@ const Navbar = () => {
           </button>
         </div>
 
-        <div
-          className={`
-            md:hidden overflow-hidden transition-all duration-300 ease-out
-            ${isOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"}
-          `}
-        >
-          <div className="flex flex-col space-y-1 pt-4 pb-6">
-            {[
-              { id: "hero", label: "НейроХештег", icon: Zap },
-              {
-                id: "services-and-team",
-                label: "Команда и сервисы",
-                icon: Rocket,
-              },
-              { id: "order-form", label: "Контакты", icon: null },
-            ].map((item) => {
-              const active = isActive(item.id);
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`
-                    w-full text-left px-4 py-3 rounded-lg transition-all duration-150
-                    active:scale-98 focus:outline-none
-                    ${
-                      active
-                        ? "bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 text-fuchsia-400 font-medium border border-fuchsia-400/30"
-                        : "text-white/80 hover:text-cyan-400 hover:bg-gradient-to-r hover:from-fuchsia-500/10 hover:to-cyan-500/10"
-                    }
-                  `}
-                >
-                  <div className="flex items-center gap-3">
-                    {item.icon && <item.icon className="w-4 h-4" />}
-                    <span>{item.label}</span>
-                  </div>
-                </button>
-              );
-            })}
+        {/* Мобильное меню - ОПТИМИЗИРОВАННАЯ АНИМАЦИЯ */}
+        {isOpen && (
+          <div className="md:hidden pt-4 pb-6 animate-fadeIn">
+            <div className="flex flex-col space-y-1">
+              {[
+                { id: "hero", label: "НейроХештег", icon: Zap },
+                {
+                  id: "services-and-team",
+                  label: "Команда и сервисы",
+                  icon: Rocket,
+                },
+                { id: "order-form", label: "Контакты", icon: null },
+              ].map((item) => {
+                const active = isActive(item.id);
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`
+                      w-full text-left px-4 py-3 rounded-lg
+                      focus:outline-none active:scale-98
+                      ${
+                        active
+                          ? "bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 text-fuchsia-400 font-medium border border-fuchsia-400/30"
+                          : "text-white/80"
+                      }
+                    `}
+                  >
+                    <div className="flex items-center gap-3">
+                      {item.icon && <item.icon className="w-4 h-4" />}
+                      <span>{item.label}</span>
+                    </div>
+                  </button>
+                );
+              })}
 
-            <button
-              onClick={scrollToForm}
-              className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden transition-all duration-150 hover:scale-[1.02] active:scale-98 focus:outline-none w-full"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600" />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-              <div className="absolute inset-[1px] bg-black/60 rounded-lg transition-all duration-300" />
-              <div className="relative flex items-center justify-center gap-2">
-                <Sparkles className="w-4 h-4 text-fuchsia-400" />
-                <span className="text-white font-bold">Связаться с нами</span>
-                <span className="text-cyan-400">→</span>
-              </div>
-            </button>
+              <button
+                onClick={scrollToForm}
+                className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden focus:outline-none active:scale-98 w-full"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-cyan-600" />
+                <div className="absolute inset-[1px] bg-black/60 rounded-lg" />
+                <div className="relative flex items-center justify-center gap-2">
+                  <Sparkles className="w-4 h-4 text-fuchsia-400" />
+                  <span className="text-white font-bold">Связаться с нами</span>
+                  <span className="text-cyan-400">→</span>
+                </div>
+              </button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </nav>
   );

@@ -3,24 +3,24 @@
 /* Цвета строго по скринам + ТЗ Neuralhashtag */
 @theme {
   /* Основные цвета */
-  --color-deus-black: #0A0A0F;
-  --color-deus-white: #FFFFFF;
-  
+  --color-deus-black: #0a0a0f;
+  --color-deus-white: #ffffff;
+
   /* Фиолетовая палитра (как на скринах) */
-  --color-deus-purple-light: #A78BFA;  /* Для рамок, иконок */
-  --color-deus-purple: #8B5CF6;        /* Основной фиолет (#НейроХештег) */
-  --color-deus-purple-dark: #6D28D9;   /* Для градиентов */
-  --color-deus-purple-deep: #4C1D95;   /* Глубокий фиолет */
-  
+  --color-deus-purple-light: #a78bfa; /* Для рамок, иконок */
+  --color-deus-purple: #8b5cf6; /* Основной фиолет (#НейроХештег) */
+  --color-deus-purple-dark: #6d28d9; /* Для градиентов */
+  --color-deus-purple-deep: #4c1d95; /* Глубокий фиолет */
+
   /* Серые оттенки */
-  --color-deus-gray: #9CA3AF;          /* Второстепенный текст */
-  --color-deus-gray-dark: #1A1A24;     /* Фон карточек */
-  --color-deus-border: #2D2D3A;        /* Рамки */
-  
+  --color-deus-gray: #9ca3af; /* Второстепенный текст */
+  --color-deus-gray-dark: #1a1a24; /* Фон карточек */
+  --color-deus-border: #2d2d3a; /* Рамки */
+
   /* Градиенты как на скринах */
-  --bg-gradient-deus: linear-gradient(135deg, #0A0A0F 0%, #4C1D95 100%);
-  --bg-gradient-card: linear-gradient(135deg, #1A1A24 0%, #2D2D3A 100%);
-  --bg-gradient-accent: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+  --bg-gradient-deus: linear-gradient(135deg, #0a0a0f 0%, #4c1d95 100%);
+  --bg-gradient-card: linear-gradient(135deg, #1a1a24 0%, #2d2d3a 100%);
+  --bg-gradient-accent: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
 }
 
 /* Базовые стили */
@@ -32,7 +32,7 @@
     color: var(--color-deus-white);
     min-height: 100vh;
   }
-  
+
   /* Карточка как на скрине 2 */
   .card {
     background: var(--bg-gradient-card);
@@ -41,7 +41,7 @@
     padding: 28px;
     backdrop-filter: blur(4px);
   }
-  
+
   /* Заголовок #НейроХештег как на скрине 1 */
   .neural-hashtag {
     background: var(--bg-gradient-accent);
@@ -51,10 +51,10 @@
     font-weight: 800;
     font-size: 64px;
   }
-  
+
   /* Кнопка */
   .btn-primary {
-    background: linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%);
+    background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
     color: white;
     font-weight: 600;
     padding: 14px 36px;
@@ -62,22 +62,22 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
   }
-  
+
   .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
   }
-  
+
   /* Второстепенный текст */
   .text-muted {
     color: var(--color-deus-gray);
   }
-  
+
   /* Акцентные элементы (рамки, иконки) */
   .accent-border {
     border-color: var(--color-deus-purple-light);
   }
-  
+
   .accent-text {
     color: var(--color-deus-purple-light);
   }
@@ -94,4 +94,19 @@
 
 .animate-spin-slow {
   animation: spin-slow 3s linear infinite;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.15s ease-out forwards;
 }
