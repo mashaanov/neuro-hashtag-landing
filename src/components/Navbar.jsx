@@ -8,16 +8,12 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const isScrolling = useRef(false);
   const scrollTimeout = useRef(null);
-
-  useEffect(() => {
-    console.log("Активная секция изменилась:", activeSection);
-  }, [activeSection]);
+  const menuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
 
-      // Если идет программный скролл - не обновляем активную секцию
       if (isScrolling.current) return;
 
       const sections = ["hero", "services-and-team", "order-form"];
@@ -44,24 +40,31 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [activeSection]);
 
+  // Блокируем скролл body когда меню открыто (опционально)
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
   const scrollToSection = (sectionId) => {
-    // Включаем блокировку
     isScrolling.current = true;
+    setIsOpen(false); // Закрываем меню сразу
 
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setIsOpen(false);
-
-      // Сразу устанавливаем активную секцию в целевую
       setActiveSection(sectionId);
 
-      // Очищаем предыдущий таймаут
       if (scrollTimeout.current) {
         clearTimeout(scrollTimeout.current);
       }
 
-      // Выключаем блокировку после завершения скролла
       scrollTimeout.current = setTimeout(() => {
         isScrolling.current = false;
         scrollTimeout.current = null;
@@ -71,10 +74,11 @@ const Navbar = () => {
 
   const scrollToForm = () => {
     isScrolling.current = true;
+    setIsOpen(false);
+
     const element = document.getElementById("order-form");
     if (element) {
       element.scrollIntoView({ behavior: "smooth", block: "start" });
-      setIsOpen(false);
       setActiveSection("order-form");
 
       if (scrollTimeout.current) {
@@ -93,7 +97,7 @@ const Navbar = () => {
   return (
     <nav
       className={`
-        fixed w-full z-50 top-0 transition-all duration-500
+        fixed w-full z-50 top-0 transition-all duration-300
         ${
           scrolled
             ? "bg-black/90 shadow-[0_0_30px_rgba(139,92,246,0.3)]"
@@ -110,19 +114,19 @@ const Navbar = () => {
             onClick={() => scrollToSection("hero")}
             className="focus:outline-none group perspective-500"
           >
-            <div className="transform transition-all duration-500 group-hover:rotate-y-12 group-hover:rotate-x-6 group-hover:scale-110">
+            <div className="transform transition-all duration-300 group-hover:rotate-y-12 group-hover:rotate-x-6 group-hover:scale-110">
               <div className="relative">
-                {/* Многослойная тень */}
-                <div className="absolute inset-0 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-500 -z-10" />
-
+                <div className="absolute inset-0 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-300 -z-10" />
                 <img
                   src={hashtag}
                   alt="Hashtag Logo"
-                  className="h-10 md:h-14 w-auto object-contain relative z-10 transition-all duration-500 group-hover:drop-shadow-[0_20px_30px_rgba(139,92,246,0.5)]"
+                  className="h-10 md:h-14 w-auto object-contain relative z-10 transition-all duration-300 group-hover:drop-shadow-[0_20px_30px_rgba(139,92,246,0.5)]"
                 />
               </div>
             </div>
           </button>
+
+          {/* Десктоп меню */}
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
             <div className="flex items-center gap-6 lg:gap-8">
               {[
@@ -148,7 +152,6 @@ const Navbar = () => {
                     >
                       {item.label}
                     </span>
-
                     <span
                       className={`
                         absolute -bottom-0 left-0 h-0.5 
@@ -157,7 +160,6 @@ const Navbar = () => {
                         ${active ? "w-full opacity-100" : "w-0 opacity-0"}
                       `}
                     />
-
                     {!active && (
                       <span className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/10 to-cyan-500/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-xl -z-0" />
                     )}
@@ -172,7 +174,7 @@ const Navbar = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-              <div className="absolute inset-[1px] bg-black/60 rounded-xl group-hover:bg-black/20 transition-all duration-500" />
+              <div className="absolute inset-[1px] bg-black/60 rounded-xl group-hover:bg-black/20 transition-all duration-300" />
               <div className="relative px-6 py-2.5 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-fuchsia-400 group-hover:scale-110 group-hover:text-cyan-400 transition-all duration-300" />
                 <span className="text-white font-bold tracking-wide">
@@ -185,8 +187,9 @@ const Navbar = () => {
             </button>
           </div>
 
+          {/* Мобильная кнопка меню */}
           <button
-            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 backdrop-blur-sm border border-white/20 hover:border-fuchsia-400/50 transition-all duration-300 focus:outline-none"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 backdrop-blur-sm border border-white/20 hover:border-fuchsia-400/50 transition-all duration-200 focus:outline-none active:scale-95"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Меню"
           >
@@ -199,13 +202,15 @@ const Navbar = () => {
           </button>
         </div>
 
+        {/* Мобильное меню - оптимизированная анимация */}
         <div
+          ref={menuRef}
           className={`
-            md:hidden overflow-hidden transition-all duration-500 ease-in-out
-            ${isOpen ? "max-h-[400px] opacity-100 mt-4" : "max-h-0 opacity-0"}
+            md:hidden overflow-hidden transition-all duration-300 ease-out
+            ${isOpen ? "max-h-[350px] opacity-100" : "max-h-0 opacity-0"}
           `}
         >
-          <div className="flex flex-col space-y-2 pt-4 pb-6 border-t border-fuchsia-500/20">
+          <div className="flex flex-col space-y-1 pt-4 pb-6">
             {[
               { id: "hero", label: "НейроХештег", icon: Zap },
               {
@@ -221,8 +226,8 @@ const Navbar = () => {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`
-                    w-full text-left relative group px-4 py-3 rounded-lg transition-all duration-300
-                    transform hover:translate-x-2 focus:outline-none
+                    w-full text-left px-4 py-3 rounded-lg transition-all duration-200
+                    active:scale-98 focus:outline-none
                     ${
                       active
                         ? "bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 text-fuchsia-400 font-medium border border-fuchsia-400/30"
@@ -240,11 +245,11 @@ const Navbar = () => {
 
             <button
               onClick={scrollToForm}
-              className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden transform transition-all duration-300 hover:scale-105 focus:outline-none w-full"
+              className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden transition-all duration-200 hover:scale-[1.02] active:scale-98 focus:outline-none w-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
-              <div className="absolute inset-[1px] bg-black/60 rounded-lg group-hover:bg-black/20 transition-all duration-500" />
+              <div className="absolute inset-[1px] bg-black/60 rounded-lg transition-all duration-300" />
               <div className="relative flex items-center justify-center gap-2">
                 <Sparkles className="w-4 h-4 text-fuchsia-400" />
                 <span className="text-white font-bold">Связаться с нами</span>
