@@ -108,20 +108,26 @@ const Navbar = () => {
         <div className="flex justify-between items-center py-3">
           <button
             onClick={() => scrollToSection("hero")}
-            className="focus:outline-none"
+            className="focus:outline-none group perspective-500"
           >
-            <img
-              src={hashtag}
-              alt="Hashtag Logo"
-              className="h-10 md:h-14 w-auto object-contain relative z-10 transition-transform duration-300 hover:scale-105"
-            />
-          </button>
+            <div className="transform transition-all duration-500 group-hover:rotate-y-12 group-hover:rotate-x-6 group-hover:scale-110">
+              <div className="relative">
+                {/* Многослойная тень */}
+                <div className="absolute inset-0 rounded-full blur-2xl opacity-0 group-hover:opacity-70 transition-opacity duration-500 -z-10" />
 
+                <img
+                  src={hashtag}
+                  alt="Hashtag Logo"
+                  className="h-10 md:h-14 w-auto object-contain relative z-10 transition-all duration-500 group-hover:drop-shadow-[0_20px_30px_rgba(139,92,246,0.5)]"
+                />
+              </div>
+            </div>
+          </button>
           <div className="hidden md:flex items-center gap-8 lg:gap-12">
             <div className="flex items-center gap-6 lg:gap-8">
               {[
                 { id: "hero", label: "НейроХештег" },
-                { id: "services-and-team", label: "Команда и сервисы" },
+                { id: "services-and-team", label: "Команда и продукты" },
                 { id: "order-form", label: "Контакты" },
               ].map((item) => {
                 const active = isActive(item.id);
@@ -129,7 +135,7 @@ const Navbar = () => {
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className="relative group py-1 text-lg font-medium focus:outline-none"
+                    className="relative group py-1 text-lg font-medium focus:outline-none cursor-pointer"
                   >
                     <span
                       className={`
@@ -162,7 +168,7 @@ const Navbar = () => {
 
             <button
               onClick={scrollToForm}
-              className="group relative overflow-hidden rounded-xl font-semibold transform transition-all duration-300 hover:scale-105 focus:outline-none"
+              className="group relative overflow-hidden rounded-xl font-semibold transform transition-all duration-300 hover:scale-105 focus:outline-none cursor-pointer"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
