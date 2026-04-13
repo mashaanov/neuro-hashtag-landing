@@ -8,21 +8,15 @@ import {
   Clock,
   Users,
   MessageCircle,
-  Send as Telegram,
-  Music,
-  Video,
-  TrendingUp,
-  Shield,
-  Award,
-  Star,
-  ArrowRight,
-  Briefcase,
-  Heart,
-  Globe,
   Mail,
   Bot,
   Calculator,
+  TrendingUp,
   TrendingDown,
+  ArrowRight,
+  Heart,
+  Shield,
+  Award
 } from "lucide-react";
 
 import photo1 from "../img/1.jpg";
@@ -39,14 +33,24 @@ const Home = () => {
   });
   const [hoveredCard, setHoveredCard] = useState(null);
   const [hoveredMember, setHoveredMember] = useState(null);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+  // Убираем mousemove слушатель для мобильных устройств
   useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    // Проверяем, не мобильное ли устройство
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (!isMobile) {
+      // Только для десктопа добавляем эффект свечения за мышкой
+      const handleMouseMove = (e) => {
+        const cursor = document.getElementById("cursor-glow");
+        if (cursor) {
+          cursor.style.left = e.clientX - 250 + "px";
+          cursor.style.top = e.clientY - 250 + "px";
+        }
+      };
+      window.addEventListener("mousemove", handleMouseMove);
+      return () => window.removeEventListener("mousemove", handleMouseMove);
+    }
   }, []);
 
   const handleSubmit = (e) => {
@@ -79,11 +83,6 @@ const Home = () => {
     { icon: Shield, text: "Безопасность данных", color: "text-fuchsia-400" },
     { icon: TrendingUp, text: "Рост конверсии", color: "text-cyan-400" },
     { icon: Award, text: "Топ поддержка", color: "text-purple-400" },
-    {
-      icon: Globe,
-      text: "(заглушки, заменить потом актуальными или убрать)",
-      color: "text-pink-400",
-    },
   ];
 
   const team = [
@@ -124,20 +123,27 @@ const Home = () => {
     },
   ];
 
+  const scrollToForm = () => {
+    const element = document.getElementById("order-form");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black overflow-x-hidden">
-      {/* Анимированный фон с курсором */}
-      <div className="fixed inset-0 pointer-events-none z-0">
+      {/* Оптимизированное свечение - только для десктопа */}
+      <div className="fixed inset-0 pointer-events-none z-0 hidden md:block">
         <div
+          id="cursor-glow"
           className="absolute w-[500px] h-[500px] rounded-full blur-[120px] opacity-20 transition-all duration-300"
           style={{
             background:
               "radial-gradient(circle, rgba(192,132,252,0.4) 0%, rgba(6,182,212,0.4) 100%)",
-            left: mousePosition.x - 250,
-            top: mousePosition.y - 250,
+            left: "-250px",
+            top: "-250px",
           }}
         />
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-fuchsia-900/20 via-transparent to-transparent" />
       </div>
 
       {/* Hero секция */}
@@ -154,7 +160,7 @@ const Home = () => {
             </div>
 
             <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold mb-6 leading-none">
-              <span className="bg-gradient-to-r from-fuchsia-400 via-cyan-400 to-fuchsia-400 bg-[length:200%_auto] bg-clip-text text-transparent animate-[shimmer_3s_linear_infinite] inline-block hover:scale-105 transition-transform duration-500">
+              <span className="bg-gradient-to-r from-fuchsia-400 via-cyan-400 to-fuchsia-400 bg-[length:200%_auto] bg-clip-text text-transparent animate-[shimmer_3s_linear_infinite] inline-block">
                 НейроХештег
               </span>
             </h1>
@@ -172,11 +178,7 @@ const Home = () => {
             </p>
 
             <button
-              onClick={() =>
-                document
-                  .getElementById("order-form")
-                  ?.scrollIntoView({ behavior: "smooth" })
-              }
+              onClick={scrollToForm}
               className="group relative inline-flex overflow-hidden rounded-2xl font-bold transform transition-all duration-300 hover:scale-105 shadow-2xl shadow-fuchsia-500/25 hover:shadow-fuchsia-500/50 cursor-pointer"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600 animate-gradient-xy" />
@@ -212,10 +214,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Сетка сервисов - ПРОДАЮЩАЯ СЕКЦИЯ */}
+      {/* Сетка сервисов */}
       <section className="py-28 relative z-10" id="services-and-team">
         <div className="container mx-auto px-4 md:px-6">
-          {/* Заголовок с социальным доказательством */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-1.5 mb-4">
               <span className="text-white/50 text-xs uppercase tracking-wider">
@@ -235,15 +236,7 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Карточки продуктов - с яркой обводкой */}
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto"
-            onClick={() =>
-              document
-                .getElementById("order-form")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
             {services.map((service, index) => (
               <div
                 key={index}
@@ -251,21 +244,12 @@ const Home = () => {
                 onMouseLeave={() => setHoveredCard(null)}
                 className="group relative cursor-pointer"
               >
-                {/* Основная карточка */}
                 <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/80 backdrop-blur-sm rounded-2xl overflow-hidden border-2 border-fuchsia-500/30 hover:border-fuchsia-500 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-fuchsia-500/40">
-                  {/* Градиентный фон при ховере */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
                   />
 
-                  {/* Уголки для акцента */}
-                  <div className="absolute top-3 left-3 w-8 h-8 border-t-2 border-l-2 border-fuchsia-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute top-3 right-3 w-8 h-8 border-t-2 border-r-2 border-fuchsia-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-3 left-3 w-8 h-8 border-b-2 border-l-2 border-fuchsia-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-3 right-3 w-8 h-8 border-b-2 border-r-2 border-fuchsia-500/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
                   <div className="relative z-10 p-8">
-                    {/* Шапка карточки */}
                     <div className="flex items-start justify-between mb-6">
                       <div
                         className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${service.color} p-3.5 shadow-lg transform group-hover:scale-110 transition-all duration-300 group-hover:rotate-3 ring-2 ring-fuchsia-400/50`}
@@ -273,7 +257,6 @@ const Home = () => {
                         <service.icon className="w-full h-full text-white" />
                       </div>
 
-                      {/* Цена/статус */}
                       <div className="text-right">
                         <div className="text-xs text-cyan-400 font-mono px-2 py-0.5 rounded-full">
                           ⚡ от 2 дней
@@ -287,7 +270,6 @@ const Home = () => {
                       </div>
                     </div>
 
-                    {/* Название и описание */}
                     <h3 className="text-2xl font-bold text-white mb-2">
                       {service.name}
                     </h3>
@@ -295,7 +277,6 @@ const Home = () => {
                       {service.desc}
                     </p>
 
-                    {/* Ключевые преимущества */}
                     <ul className="space-y-2 mb-6">
                       {[
                         "Автоматический сбор лидов",
@@ -311,7 +292,6 @@ const Home = () => {
                       ))}
                     </ul>
 
-                    {/* Статистика и кнопка */}
                     <div className="flex items-center justify-between pt-4 border-t border-white/15">
                       <div className="flex items-center gap-2 bg-fuchsia-500/10 px-3 py-1 rounded-full">
                         <TrendingUp className="w-4 h-4 text-cyan-400" />
@@ -321,11 +301,7 @@ const Home = () => {
                       </div>
 
                       <button
-                        onClick={() =>
-                          document
-                            .getElementById("order-form")
-                            ?.scrollIntoView({ behavior: "smooth" })
-                        }
+                        onClick={scrollToForm}
                         className="group/btn relative overflow-hidden rounded-xl px-5 py-2.5 font-medium transition-all duration-300 hover:scale-105"
                       >
                         <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-cyan-600" />
@@ -343,12 +319,8 @@ const Home = () => {
             ))}
           </div>
 
-          {/* Блок с цифрами и CTA */}
           <div className="mt-20 text-center">
             <div className="relative max-w-4xl mx-auto">
-              {/* Фоновое свечение */}
-              <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/10 via-cyan-500/10 to-fuchsia-500/10 rounded-3xl blur-3xl" />
-
               <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-3xl p-8 md:p-12 border border-white/10">
                 <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
                   Не нашли подходящее решение?
@@ -359,11 +331,7 @@ const Home = () => {
                 </p>
 
                 <button
-                  onClick={() =>
-                    document
-                      .getElementById("order-form")
-                      ?.scrollIntoView({ behavior: "smooth" })
-                  }
+                  onClick={scrollToForm}
                   className="group inline-flex items-center gap-3 px-8 py-4 rounded-xl font-bold transition-all duration-300 hover:scale-105 relative overflow-hidden cursor-pointer"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600 animate-gradient-xy bg-[length:200%_200%]" />
@@ -379,7 +347,8 @@ const Home = () => {
           </div>
         </div>
       </section>
-      {/* СЕКЦИЯ: Команда проекта - ИСПРАВЛЕНА */}
+
+      {/* Команда проекта */}
       <section className="py-28 relative z-10">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-16">
@@ -397,7 +366,6 @@ const Home = () => {
             </p>
           </div>
 
-          {/* Сетка 2-3-5 - адаптивная для 5 человек */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {team.map((member, index) => (
               <div
@@ -406,21 +374,17 @@ const Home = () => {
                 onMouseLeave={() => setHoveredMember(null)}
                 className="group relative cursor-pointer"
               >
-                {/* Карточка - убрана излишняя подсветка */}
                 <div className="relative bg-gradient-to-br from-white/5 to-white/[0.02] backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10 hover:border-fuchsia-500/40 transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:shadow-fuchsia-500/10">
-                  {/* Фото с эффектом - убрана яркая заливка */}
                   <div className="relative overflow-hidden h-56">
-                    {/* Легкий градиент только снизу для читаемости имени */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent z-10" />
-
                     <img
                       src={member.photo}
                       alt={member.name}
                       className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
                     />
                   </div>
 
-                  {/* Информация - без всплывающих элементов */}
                   <div className="relative z-10 p-5 text-center">
                     <h3 className="text-lg font-bold text-white mb-1 group-hover:text-fuchsia-400 transition-colors duration-300">
                       {member.name}
@@ -432,7 +396,6 @@ const Home = () => {
                       {member.bio}
                     </p>
 
-                    {/* Простая декоративная линия */}
                     <div className="w-10 h-0.5 bg-gradient-to-r from-fuchsia-500/50 to-transparent mx-auto mt-3 rounded-full group-hover:w-16 transition-all duration-300" />
                   </div>
                 </div>
@@ -440,7 +403,6 @@ const Home = () => {
             ))}
           </div>
 
-          {/* Подпись */}
           <div className="text-center mt-12">
             <p className="text-white/30 text-sm">
               <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
@@ -452,10 +414,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Проблема vs Решение - ПРОДАЮЩАЯ СЕКЦИЯ */}
+      {/* Проблема vs Решение */}
       <section className="py-28 relative z-10">
         <div className="container mx-auto px-4 md:px-6">
-          {/* Заголовок */}
           <div className="text-center mb-16">
             <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm rounded-full px-4 py-1.5 mb-4">
               <Heart className="w-3 h-3 text-red-400" />
@@ -474,7 +435,6 @@ const Home = () => {
           </div>
 
           <div className="relative max-w-6xl mx-auto">
-            {/* Соединительная линия между блоками */}
             <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
             <div className="hidden md:block absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
               <div className="w-8 h-8 rounded-full bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-fuchsia-500/30">
@@ -483,15 +443,9 @@ const Home = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* ПРОБЛЕМА - с эффектом размытия */}
+              {/* Проблема */}
               <div className="relative group">
-                {/* Фоновый эффект */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-red-500/30 to-orange-500/30 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
                 <div className="relative bg-gradient-to-br from-red-500/10 to-red-900/20 backdrop-blur-sm rounded-2xl p-8 border border-red-500/30 hover:border-red-500/50 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                  {/* Бейдж */}
-                  <div className="absolute -top-3 -right-3 w-20 h-20 bg-gradient-to-br from-red-500 to-orange-500 rounded-full blur-2xl opacity-30" />
-
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-red-500 to-orange-500 flex items-center justify-center shadow-lg transform rotate-6 group-hover:rotate-12 transition-transform duration-300">
                       <span className="text-3xl">⚠️</span>
@@ -539,7 +493,6 @@ const Home = () => {
                     ))}
                   </ul>
 
-                  {/* Статистика проблемы */}
                   <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
                     <p className="text-white/50 text-xs text-center">
                       ⚡ Потеря до{" "}
@@ -552,15 +505,9 @@ const Home = () => {
                 </div>
               </div>
 
-              {/* РЕШЕНИЕ - с эффектом свечения */}
+              {/* Решение */}
               <div className="relative group">
-                {/* Фоновое свечение */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-fuchsia-500/30 to-cyan-500/30 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
                 <div className="relative bg-gradient-to-br from-fuchsia-500/10 to-cyan-900/20 backdrop-blur-sm rounded-2xl p-8 border border-fuchsia-500/30 hover:border-fuchsia-500/50 transition-all duration-500 hover:-translate-y-2 overflow-hidden">
-                  {/* Бейдж с решением */}
-                  <div className="absolute -top-3 -right-3 w-20 h-20 bg-gradient-to-br from-fuchsia-500 to-cyan-500 rounded-full blur-2xl opacity-30" />
-
                   <div className="flex items-center gap-3 mb-8">
                     <div className="w-14 h-14 rounded-2xl bg-gradient-to-r from-fuchsia-500 to-cyan-500 flex items-center justify-center shadow-lg transform -rotate-6 group-hover:-rotate-12 transition-transform duration-300">
                       <span className="text-3xl">💡</span>
@@ -618,13 +565,8 @@ const Home = () => {
                     ))}
                   </ul>
 
-                  {/* CTA внутри блока */}
                   <button
-                    onClick={() =>
-                      document
-                        .getElementById("order-form")
-                        ?.scrollIntoView({ behavior: "smooth" })
-                    }
+                    onClick={scrollToForm}
                     className="mt-6 w-full group/btn relative overflow-hidden rounded-xl py-3 font-medium transition-all duration-300 hover:scale-[1.02] cursor-pointer"
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-cyan-600" />
@@ -640,7 +582,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Дополнительный блок с результатами */}
           <div className="mt-16 flex flex-wrap justify-center gap-4">
             {[
               {
@@ -683,11 +624,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Форма захвата - в стиле карточек продуктов (ЯРКАЯ ВЕРСИЯ) */}
+      {/* Форма */}
       <section className="py-28 relative z-10" id="order-form">
         <div className="container mx-auto px-4 md:px-6">
           <div className="max-w-2xl mx-auto">
-            {/* Заголовок как в секции сервисов */}
             <div className="text-center mb-8">
               <div className="inline-flex items-center gap-2 bg-fuchsia-500/20 backdrop-blur-sm rounded-full px-4 py-1.5 mb-4 border border-fuchsia-500/30">
                 <span className="text-fuchsia-300 text-xs uppercase tracking-wider font-bold">
@@ -704,21 +644,8 @@ const Home = () => {
               </p>
             </div>
 
-            {/* Карточка формы - яркая версия */}
             <div className="group relative cursor-pointer">
               <div className="relative bg-gradient-to-br from-gray-800 to-gray-900 backdrop-blur-sm rounded-2xl overflow-hidden border-2 border-fuchsia-500/50 hover:border-fuchsia-500 transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-fuchsia-500/50">
-                {/* Усиленный градиентный фон при ховере */}
-                <div className="absolute inset-0 bg-gradient-to-br from-fuchsia-500/20 to-cyan-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
-                {/* Постоянное слабое свечение */}
-                <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-500/5 to-cyan-500/5" />
-
-                {/* Уголки для акцента - ярче */}
-                <div className="absolute top-3 left-3 w-10 h-10 border-t-2 border-l-2 border-fuchsia-400/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute top-3 right-3 w-10 h-10 border-t-2 border-r-2 border-fuchsia-400/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-3 left-3 w-10 h-10 border-b-2 border-l-2 border-fuchsia-400/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="absolute bottom-3 right-3 w-10 h-10 border-b-2 border-r-2 border-fuchsia-400/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
                 <div className="relative z-10 p-8 md:p-10">
                   <form onSubmit={handleSubmit} className="space-y-5">
                     <div>
@@ -785,11 +712,10 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Футер - СТИЛЬНЫЙ */}
+      {/* Футер */}
       <footer className="relative z-10 border-t border-white/10 py-16 mt-20">
         <div className="container mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
-            {/* Логотип и описание */}
             <div className="text-center md:text-left">
               <h3 className="text-2xl font-bold mb-4">
                 <span className="bg-gradient-to-r from-fuchsia-400 to-cyan-400 bg-clip-text text-transparent">
@@ -802,7 +728,6 @@ const Home = () => {
               </p>
             </div>
 
-            {/* Контакты */}
             <div className="text-center md:text-left">
               <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
                 Контакты
@@ -839,7 +764,6 @@ const Home = () => {
             </div>
           </div>
 
-          {/* Нижняя линия с копирайтом */}
           <div className="mt-12 pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-white/25 text-xs">
               © 2026 НейроХештег. Все права защищены.
@@ -881,10 +805,6 @@ const Home = () => {
         .animate-gradient-xy {
           animation: gradient-xy 3s ease infinite;
           background-size: 200% 200%;
-        }
-        
-        .perspective-1000 {
-          perspective: 1000px;
         }
       `}</style>
     </div>

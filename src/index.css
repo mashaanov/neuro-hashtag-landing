@@ -106,7 +106,3 @@
     transform: translateY(0);
   }
 }
-
-.animate-fadeIn {
-  animation: fadeIn 0.15s ease-out forwards;
-}
