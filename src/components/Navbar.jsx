@@ -8,7 +8,6 @@ const Navbar = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const isScrolling = useRef(false);
   const scrollTimeout = useRef(null);
-  const menuRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -40,21 +39,9 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [activeSection]);
 
-  // Блокируем скролл body когда меню открыто (опционально)
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
   const scrollToSection = (sectionId) => {
     isScrolling.current = true;
-    setIsOpen(false); // Закрываем меню сразу
+    setIsOpen(false);
 
     const element = document.getElementById(sectionId);
     if (element) {
@@ -202,12 +189,10 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Мобильное меню - оптимизированная анимация */}
         <div
-          ref={menuRef}
           className={`
             md:hidden overflow-hidden transition-all duration-300 ease-out
-            ${isOpen ? "max-h-[350px] opacity-100" : "max-h-0 opacity-0"}
+            ${isOpen ? "max-h-[400px] opacity-100" : "max-h-0 opacity-0"}
           `}
         >
           <div className="flex flex-col space-y-1 pt-4 pb-6">
@@ -226,7 +211,7 @@ const Navbar = () => {
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
                   className={`
-                    w-full text-left px-4 py-3 rounded-lg transition-all duration-200
+                    w-full text-left px-4 py-3 rounded-lg transition-all duration-150
                     active:scale-98 focus:outline-none
                     ${
                       active
@@ -245,7 +230,7 @@ const Navbar = () => {
 
             <button
               onClick={scrollToForm}
-              className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden transition-all duration-200 hover:scale-[1.02] active:scale-98 focus:outline-none w-full"
+              className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden transition-all duration-150 hover:scale-[1.02] active:scale-98 focus:outline-none w-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-purple-600 to-cyan-600" />
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
