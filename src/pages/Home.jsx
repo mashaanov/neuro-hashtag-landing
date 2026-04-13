@@ -153,7 +153,7 @@ const Home = () => {
               </span>
             </div>
 
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-extrabold mb-6 leading-none">
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-extrabold mb-6 leading-none">
               <span className="bg-gradient-to-r from-fuchsia-400 via-cyan-400 to-fuchsia-400 bg-[length:200%_auto] bg-clip-text text-transparent animate-[shimmer_3s_linear_infinite] inline-block hover:scale-105 transition-transform duration-500">
                 НейроХештег
               </span>
