@@ -76,12 +76,12 @@ const Navbar = () => {
         border-b border-white/10
       `}
     >
-
       <div className="container mx-auto px-4 md:px-6">
-        <div className="flex justify-center items-center py-3">
+        <div className="flex items-center justify-between py-3">
+          {/* Логотип - СЛЕВА */}
           <button
             onClick={() => scrollToSection("hero")}
-            className="focus:outline-none"
+            className="focus:outline-none flex-shrink-0"
           >
             <img
               src={hashtag}
@@ -90,7 +90,7 @@ const Navbar = () => {
             />
           </button>
 
-          {/* Десктоп меню - без изменений */}
+          {/* Десктоп меню - ПО ЦЕНТРУ */}
           <div className="hidden md:flex items-center gap-8 lg:gap-8">
             <div className="flex items-center gap-6 lg:gap-8">
               {[
@@ -119,7 +119,7 @@ const Navbar = () => {
                     <span
                       className={`
                         absolute bg-[#4D4B91] -bottom-0 left-0 h-0.5 
-                         to-cyan-400
+                        to-cyan-400
                         transition-all duration-300 ease-out
                         ${active ? "w-full opacity-100" : "w-0 opacity-0"}
                       `}
@@ -141,21 +141,21 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Мобильная кнопка меню - БЕЗ backdrop-blur */}
+          {/* Бургер-меню - СПРАВА */}
           <button
-            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg focus:outline-none active:scale-95"
+            className="md:hidden relative w-10 h-10 flex items-center justify-center rounded-lg focus:outline-none active:scale-95 flex-shrink-0"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Меню"
           >
             {isOpen ? (
-              <X size={20} className="text-fuchsia-400" />
+              <X size={20} className="text-[#4D4B91]" />
             ) : (
-              <Menu size={20} className="text-cyan-400" />
+              <Menu size={20} className="text-[#4D4B91]" />
             )}
           </button>
         </div>
 
-        {/* Мобильное меню - ОПТИМИЗИРОВАННАЯ АНИМАЦИЯ */}
+        {/* Мобильное меню */}
         {isOpen && (
           <div className="md:hidden pt-4 pb-6 animate-fadeIn">
             <div className="flex flex-col space-y-1">
@@ -178,7 +178,7 @@ const Navbar = () => {
                       focus:outline-none active:scale-98
                       ${
                         active
-                          ? "bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 text-fuchsia-400 font-medium border border-fuchsia-400/30"
+                          ? "bg-[#4D4B91] font-medium border border-[#4D4B91]"
                           : "text-white/80"
                       }
                     `}
@@ -193,14 +193,12 @@ const Navbar = () => {
 
               <button
                 onClick={scrollToForm}
-                className="relative mt-4 px-4 py-3 rounded-lg overflow-hidden focus:outline-none active:scale-98 w-full"
+                className="relative mt-4 px-4 py-3 rounded-full overflow-hidden focus:outline-none active:scale-98 w-full"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-fuchsia-600 to-cyan-600" />
-                <div className="absolute inset-[1px] bg-black/60 rounded-lg" />
+                <div className="absolute inset-[1px] rounded-lg bg-[#4D4B91]" />
                 <div className="relative flex items-center justify-center gap-2">
-                  <Sparkles className="w-4 h-4 text-fuchsia-400" />
                   <span className="text-white font-bold">Связаться с нами</span>
-                  <span className="text-cyan-400">→</span>
+                  <span className="text-white">→</span>
                 </div>
               </button>
             </div>
