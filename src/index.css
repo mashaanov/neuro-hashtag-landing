@@ -1,8 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Jura:wght@300..700&display=swap");
 @import "tailwindcss";
 
 /* Цвета строго по скринам + ТЗ Neuralhashtag */
 @theme {
   /* Основные цвета */
+  --font-sans: "Jura", sans-serif;
   --color-deus-black: #0a0a0f;
   --color-deus-white: #ffffff;
 
