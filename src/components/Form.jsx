@@ -297,7 +297,7 @@ const Form = () => {
                           <div className="absolute inset-0 bg-gradient-to-r from-[#4D4B91] via-[#6B68C4] to-[#4D4B91] bg-[length:200%_100%] opacity-0 group-hover/btn:opacity-100 transition-opacity duration-500 animate-[shimmer_2s_linear_infinite]" />
                         )}
 
-                        <div className="relative px-6 py-4 flex items-center justify-center gap-3">
+                        <div className="relative px-6 py-4 flex items-center justify-center gap-3 cursor-pointer">
                           {isSubmitting ? (
                             <div className="flex items-center gap-3">
                               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
