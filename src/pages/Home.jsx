@@ -18,7 +18,7 @@ import {
   Shield,
   Award,
 } from "lucide-react";
-
+import cn from 'classnames'
 import HeroCard from "../components/HeroCard.jsx";
 import Block from "../components/Block.jsx";
 import ProblemSolution from "../components/ProblemSolution.jsx";
@@ -107,7 +107,7 @@ const Home = () => {
     <div className="min-h-screen overflow-x-hidden relative">
       {/* Фоновое изображение */}
       <div
-        className="fixed inset-0 w-full h-full bg-cover bg-center bg-no-repeat z-0"
+        className={cn("fixed", "inset-0", "w-full", "h-full", "bg-no-repeat", "z-0", "bg-cover")}
         style={{ backgroundImage: `url(${back})` }}
       />
 
